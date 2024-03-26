@@ -2,6 +2,7 @@
 **/.vscode/*
 build/*
 out/*
+/install
 screenshots
 .cache
 .DS_Store

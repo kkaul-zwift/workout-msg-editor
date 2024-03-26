@@ -43,6 +43,7 @@ FetchContent_Declare(
 )
 
 set(tinyxml2_BUILD_TESTING OFF)
+set(tinyxml2_INSTALL OFF)
 set(GLFW_BUILD_DOCS OFF)
 set(GLFW_INSTALL OFF)
 set(FMT_INSTALL OFF)

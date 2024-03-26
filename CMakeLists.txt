@@ -5,6 +5,7 @@ project(workout-msg-editor VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_DEBUG_POSTFIX "-d")
 
 add_subdirectory(ext)
 
@@ -25,4 +26,11 @@ target_sources(${PROJECT_NAME} PRIVATE
 target_include_directories(${PROJECT_NAME} PRIVATE
   src
   "${CMAKE_CURRENT_BINARY_DIR}/include"
+)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
+
+install(TARGETS ${PROJECT_NAME}
+  RUNTIME
+  DESTINATION .
 )

@@ -1,0 +1,37 @@
+name: ci
+on: [push]
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: configure
+        run: cmake -S . --preset=vs22 -B build
+      - name: build
+        run: cmake --build build --config=Release
+      - name: install
+        run: cmake --install build --prefix=install
+      - name: release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          files: install/workout-msg-editor.exe
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: init
+        run: brew install ninja
+      - name: configure
+        run: cmake -S . --preset=default -B build
+      - name: build
+        run: cmake --build build --config=Release
+      - name: install
+        run: |
+          cmake --install build --prefix=install
+          chmod a+x install/workout-msg-editor
+      - name: release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          files: install/workout-msg-editor
