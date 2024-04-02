@@ -28,6 +28,30 @@ target_include_directories(${PROJECT_NAME} PRIVATE
   "${CMAKE_CURRENT_BINARY_DIR}/include"
 )
 
+target_precompile_headers(${PROJECT_NAME} PRIVATE
+  <vulkan/vulkan.hpp>
+  <fmt/format.h>
+  <algorithm>
+  <atomic>
+  <chrono>
+  <cstdint>
+  <deque>
+  <filesystem>
+  <format>
+  <functional>
+  <future>
+  <memory>
+  <mutex>
+  <optional>
+  <span>
+  <string>
+  <string_view>
+  <unordered_map>
+  <unordered_set>
+  <variant>
+  <vector>
+)
+
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
 
 install(TARGETS ${PROJECT_NAME}
