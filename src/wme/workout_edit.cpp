@@ -42,7 +42,7 @@ auto WorkoutEdit::SegmentEdit::inspect() -> bool {
 	auto ret = false;
 	for (std::size_t i = 0; i < text_events.size(); ++i) {
 		auto& edit = text_events.at(i);
-		auto const time = format_time(edit.text_event.timeoffset);
+		auto const time = format_time(edit.text_event.get_timeoffset());
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x - 250.0f);
 		if (edit.input_text.update(FixedString{"{}##message_{}", time.view(), i}.c_str())) {
 			edit.text_event.set_message(std::string{edit.input_text.as_view()}.c_str());
@@ -51,9 +51,9 @@ auto WorkoutEdit::SegmentEdit::inspect() -> bool {
 
 		ImGui::SameLine();
 		ImGui::SetNextItemWidth(50.0f);
-		auto seconds = static_cast<int>(edit.text_event.timeoffset.count());
+		auto seconds = static_cast<int>(edit.text_event.get_timeoffset().count());
 		if (ImGui::DragInt(FixedString{"s##seconds_{}", i}.c_str(), &seconds, 1.0f, 0, 3600)) {
-			edit.text_event.timeoffset = std::chrono::seconds{seconds};
+			edit.text_event.set_timeoffset(std::chrono::seconds{seconds});
 			ret = true;
 		}
 

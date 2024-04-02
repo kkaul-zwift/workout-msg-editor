@@ -7,11 +7,13 @@
 
 namespace wme {
 struct TextEvent {
-	std::chrono::seconds timeoffset;
 	std::reference_wrapper<tinyxml2::XMLElement> element;
 
 	[[nodiscard]] auto get_message() const -> char const*;
 	void set_message(char const* message);
+
+	[[nodiscard]] auto get_timeoffset() const -> std::chrono::seconds;
+	void set_timeoffset(std::chrono::seconds value);
 };
 
 struct Segment {

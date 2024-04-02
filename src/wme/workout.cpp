@@ -67,11 +67,7 @@ struct Loader {
 			 node = node->NextSiblingElement("textevent")) {
 			auto* in_event = node->ToElement();
 			if (in_event == nullptr) { continue; }
-			auto out_event = TextEvent{
-				.timeoffset = to_seconds(in_event->Attribute("timeoffset")),
-				.element = *in_event,
-			};
-			out_segment.text_events.push_back(out_event);
+			out_segment.text_events.push_back(TextEvent{.element = *in_event});
 		}
 		result.segments.push_back(std::move(out_segment));
 	}
@@ -82,6 +78,15 @@ auto TextEvent::get_message() const -> char const* { return element.get().Attrib
 
 // NOLINTNEXTLINE(readability-make-member-function-const)
 void TextEvent::set_message(char const* message) { element.get().SetAttribute("message", message); }
+
+auto TextEvent::get_timeoffset() const -> std::chrono::seconds {
+	return std::chrono::seconds{element.get().IntAttribute("timeoffset")};
+}
+
+// NOLINTNEXTLINE(readability-make-member-function-const)
+void TextEvent::set_timeoffset(std::chrono::seconds const value) {
+	element.get().SetAttribute("timeoffset", value.count());
+}
 
 void Workout::load_from_xml(char const* xml_text) noexcept(false) {
 	auto loader = Loader{};
