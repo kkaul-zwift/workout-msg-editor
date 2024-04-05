@@ -1,6 +1,6 @@
 # Changelog
 
-### v-next
+### v0.1.4
 
 - Add/remove text events.
 - Widget tooltips (can be turned off).
