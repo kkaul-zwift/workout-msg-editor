@@ -1,3 +1,5 @@
+# Changelog
+
 ### v-next
 
 - Add/remove text events.
