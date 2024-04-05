@@ -138,13 +138,15 @@ void App::inspect() {
 		ImGui::EndCombo();
 	}
 
+	ImGui::SameLine();
+	ImGui::Checkbox("Tooltips", &m_options.show_tooltips);
+
 	if (ImGui::BeginChild("Text Events", {}, ImGuiChildFlags_Border)) {
 		if (m_editor) {
-			if (m_editor->inspect()) {
-				if (!m_unsaved) {
-					m_unsaved = true;
-					update_title();
-				}
+			auto const is_modified = m_editor->inspect(m_options);
+			if (is_modified && !m_unsaved) {
+				m_unsaved = true;
+				update_title();
 			}
 		} else {
 			ImGui::Text("Drag a workout file to load it");

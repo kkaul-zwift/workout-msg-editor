@@ -2,6 +2,8 @@
 
 Short-term tool to edit textevent messages in workout XMLs.
 
+[Changelog](changelog.md).
+
 # Running the app
 
 Download the [latest release](https://github.com/kkaul-zwift/workout-msg-editor/releases) for the target system, extract and run it.

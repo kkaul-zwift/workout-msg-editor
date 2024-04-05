@@ -60,6 +60,7 @@ struct Loader {
 
 	void load_segment(XMLElement& segment) {
 		auto out_segment = Segment{
+			.element = segment,
 			.index = static_cast<int>(result.segments.size()),
 			.name = segment.Name(),
 		};
