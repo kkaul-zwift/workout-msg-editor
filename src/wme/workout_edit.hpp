@@ -1,5 +1,6 @@
 #pragma once
 #include <wme/im_input_text.hpp>
+#include <wme/options.hpp>
 #include <wme/workout.hpp>
 
 namespace wme {
@@ -7,7 +8,7 @@ class WorkoutEdit {
   public:
 	explicit WorkoutEdit(Workout const& workout);
 
-	auto inspect() -> bool;
+	auto inspect(Options const& options) -> bool;
 
   private:
 	struct TextEventEdit {
@@ -27,7 +28,7 @@ class WorkoutEdit {
 		std::chrono::seconds duration{};
 		std::vector<TextEventEdit> text_events{};
 
-		auto inspect(tinyxml2::XMLDocument& document) -> bool;
+		auto inspect(Options const& options, tinyxml2::XMLDocument& document) -> bool;
 		auto push_textevent() -> bool;
 	};
 

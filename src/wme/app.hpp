@@ -1,5 +1,6 @@
 #pragma once
 #include <wme/context.hpp>
+#include <wme/options.hpp>
 #include <wme/workout_edit.hpp>
 #include <array>
 #include <optional>
@@ -25,10 +26,10 @@ class App {
 	void set_mode();
 
 	void inspect();
-	void inspect_header();
 
 	std::optional<Context> m_context{};
 	Mode m_mode{Mode::eLight};
+	Options m_options{};
 
 	std::string m_path{};
 	std::string m_filename{"[No Workout Loaded]"};

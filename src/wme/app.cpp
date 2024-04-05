@@ -138,9 +138,12 @@ void App::inspect() {
 		ImGui::EndCombo();
 	}
 
+	ImGui::SameLine();
+	ImGui::Checkbox("Tooltips", &m_options.show_tooltips);
+
 	if (ImGui::BeginChild("Text Events", {}, ImGuiChildFlags_Border)) {
 		if (m_editor) {
-			auto const is_modified = m_editor->inspect();
+			auto const is_modified = m_editor->inspect(m_options);
 			if (is_modified && !m_unsaved) {
 				m_unsaved = true;
 				update_title();

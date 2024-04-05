@@ -21,8 +21,8 @@ namespace {
 
 class WorkoutEdit::TextEventEdit::Inspector {
   public:
-	explicit Inspector(std::span<TextEventEdit> events, std::size_t const index)
-		: m_edit(events[index]), m_index(index), m_timeoffset(m_edit.text_event.get_timeoffset()) {}
+	explicit Inspector(Options const& options, std::span<TextEventEdit> events, std::size_t const index)
+		: m_options(options), m_edit(events[index]), m_index(index), m_timeoffset(m_edit.text_event.get_timeoffset()) {}
 
 	auto message(float const width) const -> bool {
 		auto const time = format_time(m_timeoffset);
@@ -37,21 +37,26 @@ class WorkoutEdit::TextEventEdit::Inspector {
 	auto timeoffset(float const width) const -> bool {
 		auto seconds = static_cast<int>(m_timeoffset.count());
 		ImGui::SetNextItemWidth(width);
+		auto ret = false;
 		if (ImGui::DragInt(FixedString{"s##seconds_{}", m_index}.c_str(), &seconds, 1.0f, 0, 3600)) {
 			m_edit.text_event.set_timeoffset(std::chrono::seconds{seconds});
-			return true;
+			ret = true;
 		}
-		return false;
+		if (m_options.show_tooltips) { ImGui::SetItemTooltip("Click and drag to edit, double click to enter value"); }
+		return ret;
 	}
 
 	auto should_remove(float const width) const -> bool {
 		ImGui::SetNextItemWidth(width);
-		return red_button(FixedString{"x##delete_{}", m_index}.c_str());
+		auto const ret = red_button(FixedString{"x##delete_{}", m_index}.c_str());
+		if (m_options.show_tooltips) { ImGui::SetItemTooltip("Click to remove this textevent"); }
+		return ret;
 	}
 
 	[[nodiscard]] auto get_element() const -> tinyxml2::XMLElement& { return m_edit.text_event.element; }
 
   private:
+	Options const& m_options;
 	TextEventEdit& m_edit;
 	std::size_t m_index;
 	std::chrono::seconds m_timeoffset;
@@ -67,23 +72,23 @@ WorkoutEdit::WorkoutEdit(Workout const& workout) : m_document(workout.document) 
 	}
 }
 
-auto WorkoutEdit::inspect() -> bool {
+auto WorkoutEdit::inspect(Options const& options) -> bool {
 	ImGui::Text("%s", m_name);
 	static constexpr auto flags_v = ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_DefaultOpen;
 	auto ret = false;
 	for (auto& segment : m_segments) {
 		if (ImGui::TreeNodeEx(segment.display_name.c_str(), flags_v)) {
-			ret |= segment.inspect(*m_document);
+			ret |= segment.inspect(options, *m_document);
 			ImGui::TreePop();
 		}
 	}
 	return ret;
 }
 
-auto WorkoutEdit::SegmentEdit::inspect(tinyxml2::XMLDocument& document) -> bool {
+auto WorkoutEdit::SegmentEdit::inspect(Options const& options, tinyxml2::XMLDocument& document) -> bool {
 	auto ret = false;
 	for (std::size_t i = 0; i < text_events.size(); ++i) {
-		auto const inspector = TextEventEdit::Inspector{text_events, i};
+		auto const inspector = TextEventEdit::Inspector{options, text_events, i};
 
 		ret |= inspector.message(ImGui::GetContentRegionAvail().x - 250.0f);
 
@@ -102,6 +107,7 @@ auto WorkoutEdit::SegmentEdit::inspect(tinyxml2::XMLDocument& document) -> bool 
 	}
 
 	if (ImGui::Button("Add")) { ret |= push_textevent(); }
+	if (options.show_tooltips) { ImGui::SetItemTooltip("Click to add a new textevent"); }
 
 	return ret;
 }
