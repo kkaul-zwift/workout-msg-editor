@@ -6,6 +6,8 @@
 #include <vector>
 
 namespace wme {
+using namespace std::chrono_literals;
+
 struct TextEvent {
 	std::reference_wrapper<tinyxml2::XMLElement> element;
 
@@ -17,6 +19,7 @@ struct TextEvent {
 };
 
 struct Segment {
+	std::reference_wrapper<tinyxml2::XMLElement> element;
 	int index{};
 	char const* name{""};
 	std::vector<TextEvent> text_events{};

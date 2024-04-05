@@ -11,6 +11,8 @@ class WorkoutEdit {
 
   private:
 	struct TextEventEdit {
+		class Inspector;
+
 		TextEvent text_event;
 		ImInputText input_text{};
 
@@ -20,11 +22,13 @@ class WorkoutEdit {
 	};
 
 	struct SegmentEdit {
+		std::reference_wrapper<tinyxml2::XMLElement> element;
 		std::string display_name{};
 		std::chrono::seconds duration{};
 		std::vector<TextEventEdit> text_events{};
 
-		auto inspect() -> bool;
+		auto inspect(tinyxml2::XMLDocument& document) -> bool;
+		auto push_textevent() -> bool;
 	};
 
 	std::shared_ptr<tinyxml2::XMLDocument> m_document{};
