@@ -14,7 +14,6 @@ class App {
 
   private:
 	enum class Mode { eLight, eDark };
-	static constexpr auto mode_name_v = std::array{"Light Mode", "Dark Mode"};
 
 	void on_drop(std::span<char const* const> paths);
 	void on_key(int key, int action, int mods);
@@ -26,6 +25,9 @@ class App {
 	void set_mode();
 
 	void inspect();
+	void save_button();
+	void mode_combo(float width);
+	void workout_child_window();
 
 	std::optional<Context> m_context{};
 	Mode m_mode{Mode::eLight};

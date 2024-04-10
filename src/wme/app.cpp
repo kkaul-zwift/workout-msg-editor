@@ -1,6 +1,7 @@
 #include <fmt/format.h>
 #include <wme/app.hpp>
 #include <wme/build_version.hpp>
+#include <wme/fixed_string.hpp>
 #include <wme/log.hpp>
 #include <filesystem>
 
@@ -118,6 +119,18 @@ void App::set_mode() {
 void App::inspect() {
 	if (m_editor) { ImGui::Text("%s", m_workout.name); }
 
+	save_button();
+
+	ImGui::SameLine();
+	mode_combo(120.0f);
+
+	ImGui::SameLine();
+	ImGui::Checkbox("Tooltips", &m_options.show_tooltips);
+
+	workout_child_window();
+}
+
+void App::save_button() {
 	ImGui::BeginDisabled(!m_unsaved);
 	if (ImGui::Button("Save")) {
 		if (m_workout.save_to_file(m_path.c_str())) {
@@ -126,8 +139,11 @@ void App::inspect() {
 		}
 	}
 	ImGui::EndDisabled();
-	ImGui::SameLine();
-	ImGui::SetNextItemWidth(120.0f);
+}
+
+void App::mode_combo(float const width) {
+	static constexpr auto mode_name_v = std::array{"Light Mode", "Dark Mode"};
+	ImGui::SetNextItemWidth(width);
 	if (ImGui::BeginCombo("##Mode", mode_name_v[static_cast<std::size_t>(m_mode)])) {
 		for (std::size_t i = 0; i < mode_name_v.size(); ++i) {
 			if (ImGui::Selectable(mode_name_v.at(i))) {
@@ -137,10 +153,9 @@ void App::inspect() {
 		}
 		ImGui::EndCombo();
 	}
+}
 
-	ImGui::SameLine();
-	ImGui::Checkbox("Tooltips", &m_options.show_tooltips);
-
+void App::workout_child_window() {
 	if (ImGui::BeginChild("Text Events", {}, ImGuiChildFlags_Border)) {
 		if (m_editor) {
 			auto const is_modified = m_editor->inspect(m_options);
