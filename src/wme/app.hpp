@@ -27,6 +27,7 @@ class App {
 	void inspect();
 	void save_button();
 	void mode_combo(float width);
+	void ui_scale_combo(float width);
 	void workout_child_window();
 
 	std::optional<Context> m_context{};

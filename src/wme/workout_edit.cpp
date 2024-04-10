@@ -90,13 +90,13 @@ auto WorkoutEdit::SegmentEdit::inspect(Options const& options, tinyxml2::XMLDocu
 	for (std::size_t i = 0; i < text_events.size(); ++i) {
 		auto const inspector = TextEventEdit::Inspector{options, text_events, i};
 
-		ret |= inspector.message(ImGui::GetContentRegionAvail().x - 250.0f);
+		ret |= inspector.message(ImGui::GetContentRegionAvail().x - 250.0f * options.ui_scale);
 
 		ImGui::SameLine();
-		ret |= inspector.timeoffset(50.0f);
+		ret |= inspector.timeoffset(50.0f * options.ui_scale);
 
 		ImGui::SameLine();
-		if (inspector.should_remove(50.0f)) {
+		if (inspector.should_remove(50.0f * options.ui_scale)) {
 			document.DeleteNode(&inspector.get_element());
 			text_events.erase(text_events.begin() + i);
 			ret = true;

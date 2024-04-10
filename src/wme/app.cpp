@@ -122,7 +122,10 @@ void App::inspect() {
 	save_button();
 
 	ImGui::SameLine();
-	mode_combo(120.0f);
+	mode_combo(120.0f * m_options.ui_scale);
+
+	ImGui::SameLine();
+	ui_scale_combo(60.0f * m_options.ui_scale);
 
 	ImGui::SameLine();
 	ImGui::Checkbox("Tooltips", &m_options.show_tooltips);
@@ -148,6 +151,23 @@ void App::mode_combo(float const width) {
 		for (std::size_t i = 0; i < mode_name_v.size(); ++i) {
 			if (ImGui::Selectable(mode_name_v.at(i))) {
 				m_mode = static_cast<Mode>(i);
+				set_mode();
+			}
+		}
+		ImGui::EndCombo();
+	}
+}
+
+void App::ui_scale_combo(float const width) {
+	ImGui::SetNextItemWidth(width);
+	if (ImGui::BeginCombo("UI Scale", FixedString{"{}%", static_cast<int>(m_options.ui_scale * 100.0f)}.c_str())) {
+		for (int scale = 100; scale <= 200; scale += 25) {
+			if (ImGui::Selectable(FixedString{"{}%", scale}.c_str())) {
+				m_options.ui_scale = static_cast<float>(scale) / 100.0f;
+				auto style = ImGuiStyle{};
+				style.ScaleAllSizes(m_options.ui_scale);
+				ImGui::GetStyle() = style;
+				ImGui::GetIO().FontGlobalScale = m_options.ui_scale;
 				set_mode();
 			}
 		}
