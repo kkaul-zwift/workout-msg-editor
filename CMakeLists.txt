@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(workout-msg-editor VERSION 0.1.4)
+project(workout-msg-editor VERSION 0.1.5)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -9,7 +9,8 @@ set(CMAKE_DEBUG_POSTFIX "-d")
 
 add_subdirectory(ext)
 
-configure_file(src/build_version.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/include/wme/build_version.hpp" @ONLY)
+configure_file(src/build_version.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/include/wme/build_version.hpp" @ONLY NEWLINE_STYLE UNIX)
+configure_file(src/ci.yml.in "${CMAKE_CURRENT_SOURCE_DIR}/.github/workflows/ci.yml" @ONLY NEWLINE_STYLE UNIX)
 
 add_executable(${PROJECT_NAME} WIN32)
 
