@@ -12,12 +12,12 @@ jobs:
       - name: install
         run: |
           cmake --install build --prefix=.
-          tar.exe -a -cf workout-msg-editor-x64-windows-v0.1.5.zip workout-msg-editor.exe
+          tar.exe -a -cf workout-msg-editor-x64-windows-v@PROJECT_VERSION@.zip workout-msg-editor.exe
       - name: release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/v')
         with:
-          files: workout-msg-editor-x64-windows-v0.1.5.zip
+          files: workout-msg-editor-x64-windows-v@PROJECT_VERSION@.zip
   build-macos:
     runs-on: macos-latest
     steps:
@@ -31,9 +31,9 @@ jobs:
       - name: install
         run: |
           cmake --install build --prefix=.
-          zip workout-msg-editor-x64-macos-v0.1.5.zip workout-msg-editor
+          zip workout-msg-editor-x64-macos-v@PROJECT_VERSION@.zip workout-msg-editor
       - name: release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/v')
         with:
-          files: workout-msg-editor-x64-macos-v0.1.5.zip
+          files: workout-msg-editor-x64-macos-v@PROJECT_VERSION@.zip

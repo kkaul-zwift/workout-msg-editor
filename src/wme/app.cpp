@@ -1,6 +1,7 @@
 #include <fmt/format.h>
 #include <wme/app.hpp>
 #include <wme/build_version.hpp>
+#include <wme/fixed_string.hpp>
 #include <wme/log.hpp>
 #include <filesystem>
 
@@ -118,6 +119,21 @@ void App::set_mode() {
 void App::inspect() {
 	if (m_editor) { ImGui::Text("%s", m_workout.name); }
 
+	save_button();
+
+	ImGui::SameLine();
+	mode_combo(120.0f * m_options.ui_scale);
+
+	ImGui::SameLine();
+	ui_scale_combo(60.0f * m_options.ui_scale);
+
+	ImGui::SameLine();
+	ImGui::Checkbox("Tooltips", &m_options.show_tooltips);
+
+	workout_child_window();
+}
+
+void App::save_button() {
 	ImGui::BeginDisabled(!m_unsaved);
 	if (ImGui::Button("Save")) {
 		if (m_workout.save_to_file(m_path.c_str())) {
@@ -126,8 +142,11 @@ void App::inspect() {
 		}
 	}
 	ImGui::EndDisabled();
-	ImGui::SameLine();
-	ImGui::SetNextItemWidth(120.0f);
+}
+
+void App::mode_combo(float const width) {
+	static constexpr auto mode_name_v = std::array{"Light Mode", "Dark Mode"};
+	ImGui::SetNextItemWidth(width);
 	if (ImGui::BeginCombo("##Mode", mode_name_v[static_cast<std::size_t>(m_mode)])) {
 		for (std::size_t i = 0; i < mode_name_v.size(); ++i) {
 			if (ImGui::Selectable(mode_name_v.at(i))) {
@@ -137,10 +156,26 @@ void App::inspect() {
 		}
 		ImGui::EndCombo();
 	}
+}
 
-	ImGui::SameLine();
-	ImGui::Checkbox("Tooltips", &m_options.show_tooltips);
+void App::ui_scale_combo(float const width) {
+	ImGui::SetNextItemWidth(width);
+	if (ImGui::BeginCombo("UI Scale", FixedString{"{}%", static_cast<int>(m_options.ui_scale * 100.0f)}.c_str())) {
+		for (int scale = 100; scale <= 200; scale += 25) {
+			if (ImGui::Selectable(FixedString{"{}%", scale}.c_str())) {
+				m_options.ui_scale = static_cast<float>(scale) / 100.0f;
+				auto style = ImGuiStyle{};
+				style.ScaleAllSizes(m_options.ui_scale);
+				ImGui::GetStyle() = style;
+				ImGui::GetIO().FontGlobalScale = m_options.ui_scale;
+				set_mode();
+			}
+		}
+		ImGui::EndCombo();
+	}
+}
 
+void App::workout_child_window() {
 	if (ImGui::BeginChild("Text Events", {}, ImGuiChildFlags_Border)) {
 		if (m_editor) {
 			auto const is_modified = m_editor->inspect(m_options);

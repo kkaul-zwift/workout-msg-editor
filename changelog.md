@@ -1,5 +1,9 @@
 # Changelog
 
+### v0.1.5
+
+- UI scaling.
+
 ### v0.1.4
 
 - Add/remove text events.
