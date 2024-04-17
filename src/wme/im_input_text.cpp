@@ -1,5 +1,6 @@
 #include <wme/im_input_text.hpp>
 #include <wme/ptr.hpp>
+#include <algorithm>
 #include <cassert>
 #include <cstring>
 
@@ -31,8 +32,8 @@ auto ImInputText::on_callback(ImGuiInputTextCallbackData& data) -> int {
 }
 
 void ImInputText::resize_buffer(ImGuiInputTextCallbackData& data) {
-	assert(!m_buffer.empty());
-	m_buffer.resize(m_buffer.size() * 2);
+	if (m_buffer.size() >= data.BufSize) { return; }
+	m_buffer.resize(std::max(m_buffer.size() * 2, init_size_v));
 	data.BufSize = static_cast<int>(m_buffer.size());
 	data.Buf = m_buffer.data();
 	data.BufDirty = true;
